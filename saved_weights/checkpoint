@@ -1,0 +1,2 @@
+model_checkpoint_path: "VMD29-50_LSTM800-1e4"
+all_model_checkpoint_paths: "VMD29-50_LSTM800-1e4"
