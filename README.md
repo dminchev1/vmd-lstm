@@ -3,8 +3,13 @@ Time-series forecasting using VMD-LSTM model architecture
 Inspiration article: https://arxiv.org/abs/2212.14687
 
 Introduction:
-- The idea of the article which uses mainly forecasting of each separate IMF and the sum up the results into reconstructed y_pred was only taken as inspiration. Experiment with LSTM and single dataset of IMFs was used in the following work.
+- The idea of the article which uses mainly forecasting of each separate IMF and the sum up the results into reconstructed y_pred and was only taken as inspiration. Experimenting with LSTM and single dataset of IMFs were used in the following project.
 - Starting the research for the regression problem with boston housing dataset target variable only. Finishing it with Standard and Poor's 500 ETF closing prices transformed into detrended percentage changes time-series. The model pipeline consist of Variational mode decomposition (VMD) part which creates dataset with n-amount of derivative features (IMFs). Input data for the modeling part of the algorithm consist only of IMFs with batch lengths of t-21 to t-0 for the features and t+1 for the target created with tf.TimeseriesGenerator(). Afterwards in the process of verification of the results simulation was created and a few mistakes in the process were detected.
+
+Content:
+- vmd-lstm: the initial research using boston housing data
+- vmd-lstm_findata: using the previous research knowledge, organized into a class of methods for ease of use with SPY log(returns) data.
+- vmd_verify: containing the final results and development of stepwise simulation with build up of the previous knowledge of how to forecast t+1 using tf.TimeseriesGenerator()
 
 Notes:
 - Decomposing before splitting the data into train/test sets is leaking the target in the test set which makes test results unvalid.
