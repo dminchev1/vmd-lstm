@@ -1,9 +1,22 @@
 # vmd-lstm
 Time-series forecasting using VMD-LSTM model architecture
-(inspired from: https://arxiv.org/abs/2212.14687)
+Inspiration article: https://arxiv.org/abs/2212.14687
 
-Using only 1d target data that is decomposed into many IMFs which are used as feature dataset.
-Target is financial market data returns with daily interval for the last 5 years of Standart and Poor's 500 ETF Closing prices.
-Model is based on Keras.
+Introduction:
+- The idea of the article which uses mainly forecasting of each separate IMF and the sum up the results into reconstructed y_pred was only taken as inspiration. Experiment with LSTM and single dataset of IMFs was used in the following work.
+- Starting the research for the regression problem with boston housing dataset target variable only. Finishing it with Standard and Poor's 500 ETF closing prices transformed into detrended percentage changes time-series. The model pipeline consist of Variational mode decomposition (VMD) part which creates dataset with n-amount of derivative features (IMFs). Input data for the modeling part of the algorithm consist only of IMFs with batch lengths of t-21 to t-0 for the features and t+1 for the target created with tf.TimeseriesGenerator(). Afterwards in the process of verification of the results simulation was created and a few mistakes in the process were detected.
 
-Notes: There was a challange with understanding VMD pre-processing part of the model. Leaking data with first decomposing all the data was a problem in the vmd-lstm.ipynb and vmd-lstm_findata.ipynb. After that there is vmd_verify.ipynb which fix the problem with leaking future target data into the test set by not using simulation iterative algorithm rather than just decomposing all at the begining. 
+Notes:
+- Decomposing before splitting the data into train/test sets is leaking the target in the test set which makes test results unvalid.
+- Decomposing with Python vmdpy requires even amount of examples in the data that is used to be decomposed.
+- Searching for the best vmdpy.VMD() parameters was done by reconstructing the IMFs and substracting the original input in order to analyze the error in terms of RMSE and MAPE. The results with lowest RMSE and MAPE in the reconstruction error were picked. It was assumed that reconstruction error do not have to follow normal distribution.
+- Using tf.TimeseriesGenerator() there were a few constrains about it. First the horizon for the target slicing is restricted to only one value per batch. Second probably because of extra measures in order to not leak future data into the training process the developers that wrote the code restricted you from predicting t+1 and in order to to that you should pad np.zeros(len(IMFs)) as last row in order to go to t+1 prediction.
+- Nothing about the model architecture went through parameter search. Adam optimizer with loss function mean squared error.
+
+Conclution:
+- Using only price data with mode decomposition technique and LSTM model won't produce any meaningful results and will only support the efficient market hypothesis. The model outcome is that the best prediction of t+1 is the yesterday price. Result plots can be seen in the file vmd_verify.ipynb at the bottom of the notebook simulation results.
+
+
+Contacts:
+- dminchev66@gmail.com
+- https://www.linkedin.com/in/daniel-minchev-b1556a156/
